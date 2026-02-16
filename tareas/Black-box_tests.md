@@ -93,4 +93,3 @@ Decision Table
 | pedro    | contraseña77  | User      |
 | juan     | password123   | Inválido  |
 | carlos   | 123           | Inválido  |
-
