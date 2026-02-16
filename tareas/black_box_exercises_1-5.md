@@ -27,7 +27,7 @@
 **Caso 4:** Cantidad 10 (Rango 6-10) -> Resultado esperado: 5% de descuento.
 **Caso 5:** Cantidad 20 (Rango > 10) -> Resultado esperado: 10% de descuento.
 
-## Ejercicio 5: Costos de Envío
+## Ejercicio 5: Costos del Envío
 **Caso 1:** Envío Estándar, Peso 3kg -> Resultado esperado: $10.
 **Caso 2:** Envío Estándar, Peso 5kg -> Resultado esperado: $10.
 **Caso 3:** Envío Estándar, Peso 8kg -> Resultado esperado: $15.
