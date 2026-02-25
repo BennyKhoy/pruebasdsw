@@ -349,7 +349,6 @@ def authenticate_user(username, password):
     return "Invalid"
 
 
-# 21
 def get_weather_advisory(temperature, humidity):
     """
     Provides weather advisories based on temperature and humidity.
