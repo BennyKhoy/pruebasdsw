@@ -6,6 +6,11 @@ White-box unit testing examples.
 import unittest
 
 from white_box.class_exercises import (
+    ElevatorSystem,
+    TrafficLight,
+    UserAuthentication,
+    VendingMachine,
+    DocumentEditingSystem,
     authenticate_user,
     calculate_items_shipping_cost,
     calculate_order_total,
@@ -394,3 +399,197 @@ class TestWhiteBox(unittest.TestCase):
 
     def test_weather_low_temp_low_humidity(self):
         self.assertEqual(get_weather_advisory(20, 50), "No Specific Advisory")
+
+
+class TestWhiteBoxVendingMachine(unittest.TestCase):
+    """
+    Vending Machine unit tests.
+    """
+
+    def setUp(self):
+        self.vm = VendingMachine()
+        self.assertEqual(self.vm.state, "Ready")
+
+    def test_vending_machine_insert_coin_error(self):
+        """
+        Checks the vending machine can accept coins.
+        """
+        self.vm.state = "Dispensing"
+        output = self.vm.insert_coin()
+        self.assertEqual(self.vm.state, "Dispensing")
+        self.assertEqual(output, "Invalid operation in current state.")
+
+    def test_vending_machine_insert_coin_success(self):
+        """
+        Checks the vending machine fails to accept coins when it's not ready.
+        """
+        output = self.vm.insert_coin()
+        self.assertEqual(self.vm.state, "Dispensing")
+        self.assertEqual(output, "Coin Inserted. Select your drink.")
+
+    def test_select_drink_success(self):
+        self.vm.insert_coin()
+        output = self.vm.select_drink()
+        self.assertEqual(self.vm.state, "Ready")
+        self.assertEqual(output, "Drink Dispensed. Thank you!")
+
+    def test_select_drink_invalid_state(self):
+        output = self.vm.select_drink()
+        self.assertEqual(self.vm.state, "Ready")
+        self.assertEqual(output, "Invalid operation in current state.")
+
+
+class TestTrafficLight(unittest.TestCase):
+    def setUp(self):
+        self.light = TrafficLight()
+
+    def test_initial_state(self):
+        self.assertEqual(self.light.get_current_state(), "Red")
+
+    def test_red_to_green(self):
+        self.light.change_state()
+        self.assertEqual(self.light.get_current_state(), "Green")
+
+    def test_green_to_yellow(self):
+        self.light.change_state()  # Red → Green
+        self.light.change_state()  # Green → Yellow
+        self.assertEqual(self.light.get_current_state(), "Yellow")
+
+    def test_yellow_to_red(self):
+        self.light.change_state()  # Red → Green
+        self.light.change_state()  # Green → Yellow
+        self.light.change_state()  # Yellow → Red
+        self.assertEqual(self.light.get_current_state(), "Red")
+
+    def test_full_cycle(self):
+        states = []
+        for _ in range(4):
+            states.append(self.light.get_current_state())
+            self.light.change_state()
+
+        self.assertEqual(states, ["Red", "Green", "Yellow", "Red"])
+
+
+class TestUserAuthentication(unittest.TestCase):
+    def setUp(self):
+        self.auth = UserAuthentication()
+
+    def test_initial_state(self):
+        self.assertEqual(self.auth.state, "Logged Out")
+
+    def test_login_success(self):
+        output = self.auth.login()
+        self.assertEqual(self.auth.state, "Logged In")
+        self.assertEqual(output, "Login successful")
+
+    def test_login_invalid_when_already_logged_in(self):
+        self.auth.login()
+        output = self.auth.login()
+        self.assertEqual(self.auth.state, "Logged In")
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_logout_success(self):
+        self.auth.login()
+        output = self.auth.logout()
+        self.assertEqual(self.auth.state, "Logged Out")
+        self.assertEqual(output, "Logout successful")
+
+    def test_logout_invalid_when_logged_out(self):
+        output = self.auth.logout()
+        self.assertEqual(self.auth.state, "Logged Out")
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_full_login_logout_cycle(self):
+        self.auth.login()
+        self.assertEqual(self.auth.state, "Logged In")
+
+        self.auth.logout()
+        self.assertEqual(self.auth.state, "Logged Out")
+
+
+class TestDocumentEditingSystem(unittest.TestCase):
+    def setUp(self):
+        self.doc = DocumentEditingSystem()
+
+    def test_initial_state(self):
+        self.assertEqual(self.doc.state, "Editing")
+
+    def test_save_document_success(self):
+        output = self.doc.save_document()
+        self.assertEqual(self.doc.state, "Saved")
+        self.assertEqual(output, "Document saved successfully")
+
+    def test_save_document_invalid_when_already_saved(self):
+        self.doc.save_document()
+        output = self.doc.save_document()
+        self.assertEqual(self.doc.state, "Saved")
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_edit_document_success(self):
+        self.doc.save_document()
+        output = self.doc.edit_document()
+        self.assertEqual(self.doc.state, "Editing")
+        self.assertEqual(output, "Editing resumed")
+
+    def test_edit_document_invalid_when_editing(self):
+        output = self.doc.edit_document()
+        self.assertEqual(self.doc.state, "Editing")
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_full_edit_save_cycle(self):
+        self.doc.save_document()
+        self.assertEqual(self.doc.state, "Saved")
+
+        self.doc.edit_document()
+        self.assertEqual(self.doc.state, "Editing")
+
+
+class TestElevatorSystem(unittest.TestCase):
+    def setUp(self):
+        self.elevator = ElevatorSystem()
+
+    def test_initial_state(self):
+        self.assertEqual(self.elevator.state, "Idle")
+
+    def test_move_up_success(self):
+        output = self.elevator.move_up()
+        self.assertEqual(self.elevator.state, "Moving Up")
+        self.assertEqual(output, "Elevator moving up")
+
+    def test_move_down_success(self):
+        output = self.elevator.move_down()
+        self.assertEqual(self.elevator.state, "Moving Down")
+        self.assertEqual(output, "Elevator moving down")
+
+    def test_move_up_invalid_when_moving(self):
+        self.elevator.move_up()
+        output = self.elevator.move_up()
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_move_down_invalid_when_moving(self):
+        self.elevator.move_down()
+        output = self.elevator.move_down()
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_stop_from_moving_up(self):
+        self.elevator.move_up()
+        output = self.elevator.stop()
+        self.assertEqual(self.elevator.state, "Idle")
+        self.assertEqual(output, "Elevator stopped")
+
+    def test_stop_from_moving_down(self):
+        self.elevator.move_down()
+        output = self.elevator.stop()
+        self.assertEqual(self.elevator.state, "Idle")
+        self.assertEqual(output, "Elevator stopped")
+
+    def test_stop_invalid_when_idle(self):
+        output = self.elevator.stop()
+        self.assertEqual(output, "Invalid operation in current state")
+
+    def test_full_cycle_up_and_stop(self):
+        self.elevator.move_up()
+        self.assertEqual(self.elevator.state, "Moving Up")
+
+        self.elevator.stop()
+        self.assertEqual(self.elevator.state, "Idle")
