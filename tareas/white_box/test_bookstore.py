@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 from white_box.book_store import Book, BookStore
 
+
 class TestBook(unittest.TestCase):
     """
     Book class unit tests.
