@@ -7,7 +7,12 @@ import subprocess
 import unittest
 from unittest.mock import patch
 
-from white_box.mockup_exercises import execute_command, fetch_data_from_api, perform_action_based_on_time, read_data_from_file
+from white_box.mockup_exercises import (
+    execute_command,
+    fetch_data_from_api,
+    perform_action_based_on_time,
+    read_data_from_file,
+)
 
 
 class TestFetchDataFromApi(unittest.TestCase):
@@ -108,6 +113,7 @@ class TestReadDataFromFile(unittest.TestCase):
 
         with self.assertRaises(FileNotFoundError):
             read_data_from_file("missing.txt")
+
 
 class TestExecuteCommand(unittest.TestCase):
     """
