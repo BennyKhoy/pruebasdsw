@@ -74,7 +74,10 @@ class TestGeneratePasswordHash(unittest.TestCase):
 class TestLoadUserData(unittest.TestCase):
 
     @patch("os.path.exists", return_value=True)
-    @patch("builtins.open", mock_open(read_data='{"alex": {"password_hash": "ghkcu", "salt": "abcd"}}'))
+    @patch(
+        "builtins.open",
+        mock_open(read_data='{"alex": {"password_hash": "ghkcu", "salt": "abcd"}}'),
+    )
     def test_load_user_data_file_exists(self, mock_exists):
         """
         Verifica que se carga el archivo correctamente si existe
@@ -93,7 +96,9 @@ class TestLoadUserData(unittest.TestCase):
 
 class TestSaveUserData(unittest.TestCase):
     @patch("builtins.open", mock_open())
-    def test_save_user_data_writes_file(self, ):
+    def test_save_user_data_writes_file(
+        self,
+    ):
         """
         verifica que se escribe el archivo correctamente
         """
@@ -117,13 +122,18 @@ class TestRegister(unittest.TestCase):
         mock_save.assert_called_once()
 
     @patch("builtins.print")
-    @patch("ejercicio1.load_user_data", return_value={"alex": {"password_hash": "ghkcu", "salt": "abcd"}})
+    @patch(
+        "ejercicio1.load_user_data",
+        return_value={"alex": {"password_hash": "ghkcu", "salt": "abcd"}},
+    )
     def test_register_existing_user(self, mock_load, mock_print):
         """
         verifica que no se puede registrar un usuario ya existente
         """
         register("alex")
-        mock_print.assert_called_with("User already exists. Please choose a different username.")
+        mock_print.assert_called_with(
+            "User already exists. Please choose a different username."
+        )
 
 
 class TestLogin(unittest.TestCase):
@@ -144,7 +154,9 @@ class TestLogin(unittest.TestCase):
         """
         salt = generate_salt()
         password_hash = generate_password_hash("password123", salt)
-        mock_load.return_value = {"alex": {"password_hash": password_hash, "salt": salt}}
+        mock_load.return_value = {
+            "alex": {"password_hash": password_hash, "salt": salt}
+        }
 
         login("alex", "password123")
         mock_print.assert_called_with("Login successful!")
@@ -157,7 +169,9 @@ class TestLogin(unittest.TestCase):
         """
         salt = generate_salt()
         password_hash = generate_password_hash("password123", salt)
-        mock_load.return_value = {"alex": {"password_hash": password_hash, "salt": salt}}
+        mock_load.return_value = {
+            "alex": {"password_hash": password_hash, "salt": salt}
+        }
 
         login("alex", "wrongpassword")
         mock_print.assert_called_with("Invalid password. Please try again.")

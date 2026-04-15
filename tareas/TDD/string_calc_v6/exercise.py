@@ -1,5 +1,6 @@
 import re
 
+
 def add(numbers: str) -> int:
     if numbers == "":
         return 0
@@ -14,7 +15,9 @@ def add(numbers: str) -> int:
         delimiter = re.escape(raw_delimiter)
 
     if raw_delimiter and "," in numbers:
-        raise ValueError(f"'{raw_delimiter}' expected but ',' found at position {numbers.find(',')}.")
+        raise ValueError(
+            f"'{raw_delimiter}' expected but ',' found at position {numbers.find(',')}."
+        )
 
     numbers_normalized = numbers.replace("\n", ",")
     if numbers_normalized.endswith(","):

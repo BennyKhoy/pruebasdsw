@@ -1,5 +1,6 @@
 import re
 
+
 def add(numbers: str) -> int:
     if numbers == "":
         return 0
@@ -30,9 +31,7 @@ def add(numbers: str) -> int:
         )
     if is_custom_delimiter and "," in numbers:
         pos = numbers.find(",")
-        errors.append(
-            f"'{raw_delimiter}' expected but ',' found at position {pos}."
-        )
+        errors.append(f"'{raw_delimiter}' expected but ',' found at position {pos}.")
 
     if not is_custom_delimiter:
         wrong_sep = re.search(r"(\d)(,\n|\n,)(\d)", numbers)

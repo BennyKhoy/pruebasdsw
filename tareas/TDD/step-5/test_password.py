@@ -23,7 +23,9 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_with_2_numbers_passes_rule(self):
         """Checks that a password with exactly two numbers satisfies the rule."""
         result = validate_password("abcdef12")
-        self.assertNotIn("The password must contain at least 2 numbers", result["errors"])
+        self.assertNotIn(
+            "The password must contain at least 2 numbers", result["errors"]
+        )
 
     def test_multiple_violations_return_all_errors(self):
         """Verifies that multiple validation errors are all returned."""
@@ -34,12 +36,16 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_without_uppercase_returns_error(self):
         """Ensures that missing uppercase letters returns the correct error message."""
         result = validate_password("abcdef12")
-        self.assertIn("password must contain at least one capital letter", result["errors"])
+        self.assertIn(
+            "password must contain at least one capital letter", result["errors"]
+        )
 
     def test_password_with_uppercase_passes_rule(self):
         """Verifies that a password with uppercase letters passes the rule."""
         result = validate_password("Abcdef12")
-        self.assertNotIn("password must contain at least one capital letter", result["errors"])
+        self.assertNotIn(
+            "password must contain at least one capital letter", result["errors"]
+        )
 
     def test_password_without_special_char_is_invalid(self):
         """Checks that a password without special characters is invalid."""
@@ -49,22 +55,30 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_without_special_char_returns_error(self):
         """Ensures that missing special characters returns the correct error message."""
         result = validate_password("Abcdef12")
-        self.assertIn("password must contain at least one special character", result["errors"])
+        self.assertIn(
+            "password must contain at least one special character", result["errors"]
+        )
 
     def test_password_with_at_sign_passes_special_char_rule(self):
         """Verifies that '@' satisfies the special character requirement."""
         result = validate_password("Abcdef1@")
-        self.assertNotIn("password must contain at least one special character", result["errors"])
+        self.assertNotIn(
+            "password must contain at least one special character", result["errors"]
+        )
 
     def test_password_with_exclamation_passes_special_char_rule(self):
         """Verifies that '!' satisfies the special character requirement."""
         result = validate_password("Abcdef1!")
-        self.assertNotIn("password must contain at least one special character", result["errors"])
+        self.assertNotIn(
+            "password must contain at least one special character", result["errors"]
+        )
 
     def test_password_with_hash_passes_special_char_rule(self):
         """Verifies that '#' satisfies the special character requirement."""
         result = validate_password("Abcdef1#")
-        self.assertNotIn("password must contain at least one special character", result["errors"])
+        self.assertNotIn(
+            "password must contain at least one special character", result["errors"]
+        )
 
     def test_fully_valid_password_is_valid(self):
         """Checks that a fully valid password passes all validation rules."""
@@ -81,8 +95,12 @@ class TestPasswordValidator(unittest.TestCase):
         result = validate_password("abc")
         self.assertIn("Password must be at least 8 characters", result["errors"])
         self.assertIn("The password must contain at least 2 numbers", result["errors"])
-        self.assertIn("password must contain at least one capital letter", result["errors"])
-        self.assertIn("password must contain at least one special character", result["errors"])
+        self.assertIn(
+            "password must contain at least one capital letter", result["errors"]
+        )
+        self.assertIn(
+            "password must contain at least one special character", result["errors"]
+        )
         self.assertEqual(len(result["errors"]), 4)
 
 

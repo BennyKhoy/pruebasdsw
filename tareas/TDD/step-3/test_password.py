@@ -23,7 +23,9 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_with_2_numbers_passes_rule(self):
         """Checks that a password with exactly two numbers satisfies the rule."""
         result = validate_password("abcdef12")
-        self.assertNotIn("The password must contain at least 2 numbers", result["errors"])
+        self.assertNotIn(
+            "The password must contain at least 2 numbers", result["errors"]
+        )
 
     def test_very_short_password_with_no_numbers_returns_both_errors(self):
         """Verifies that a very short password without numbers returns both error messages."""

@@ -3,8 +3,8 @@ from . import exercise
 
 
 class TestStringCalculator(unittest.TestCase):
+    """Test Req1"""
 
-    '''Test Req1'''
     def test_empty_string_returns_zero(self):
         resultado = exercise.add("")
         self.assertEqual(resultado, 0)

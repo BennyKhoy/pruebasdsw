@@ -19,7 +19,4 @@ def validate_password(password: str) -> dict:
     if not any(c in special_chars for c in password):
         errors.append("password must contain at least one special character")
 
-    return {
-        "is_valid": len(errors) == 0,
-        "errors": errors
-    }
+    return {"is_valid": len(errors) == 0, "errors": errors}

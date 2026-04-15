@@ -37,12 +37,16 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_with_exactly_2_numbers_passes_rule(self):
         """Checks that a password with exactly two numbers passes the validation rule."""
         result = validate_password("abcdef12")
-        self.assertNotIn("The password must contain at least 2 numbers", result["errors"])
+        self.assertNotIn(
+            "The password must contain at least 2 numbers", result["errors"]
+        )
 
     def test_password_with_more_than_2_numbers_passes_rule(self):
         """Verifies that a password with more than two numbers passes the validation rule."""
         result = validate_password("abcd1234")
-        self.assertNotIn("The password must contain at least 2 numbers", result["errors"])
+        self.assertNotIn(
+            "The password must contain at least 2 numbers", result["errors"]
+        )
 
 
 if __name__ == "__main__":

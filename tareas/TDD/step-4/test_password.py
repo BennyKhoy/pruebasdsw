@@ -23,7 +23,9 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_with_2_numbers_passes_rule(self):
         """Checks that a password with exactly two numbers satisfies the rule."""
         result = validate_password("abcdef12")
-        self.assertNotIn("The password must contain at least 2 numbers", result["errors"])
+        self.assertNotIn(
+            "The password must contain at least 2 numbers", result["errors"]
+        )
 
     def test_multiple_violations_return_all_errors(self):
         """Verifies that multiple validation errors are all returned."""
@@ -39,17 +41,23 @@ class TestPasswordValidator(unittest.TestCase):
     def test_password_without_uppercase_returns_correct_error(self):
         """Ensures that missing uppercase letters returns the correct error message."""
         result = validate_password("abcdef12")
-        self.assertIn("password must contain at least one capital letter", result["errors"])
+        self.assertIn(
+            "password must contain at least one capital letter", result["errors"]
+        )
 
     def test_password_with_only_uppercase_passes_rule(self):
         """Verifies that a password with at least one uppercase letter passes the rule."""
         result = validate_password("Abcdef12")
-        self.assertNotIn("password must contain at least one capital letter", result["errors"])
+        self.assertNotIn(
+            "password must contain at least one capital letter", result["errors"]
+        )
 
     def test_password_with_multiple_uppercase_passes_rule(self):
         """Checks that multiple uppercase letters satisfy the uppercase requirement."""
         result = validate_password("ABcdef12")
-        self.assertNotIn("password must contain at least one capital letter", result["errors"])
+        self.assertNotIn(
+            "password must contain at least one capital letter", result["errors"]
+        )
 
 
 if __name__ == "__main__":
