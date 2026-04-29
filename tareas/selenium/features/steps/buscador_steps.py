@@ -2,7 +2,10 @@ import time
 
 from behave import given, then, when  # pylint: disable=no-name-in-module
 from selenium import webdriver
-from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    TimeoutException,
+)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -13,26 +16,40 @@ WAIT = 10
 
 UNIVERSITY_KEYWORDS = {
     "iteso.mx": ["iteso", "universidad jesuita", "guadalajara"],
-    "tec.mx":   ["tec", "tecnológico de monterrey", "tecnologico"],
-    "ipn.mx":   ["ipn", "politécnico", "politecnico", "instituto politécnico"],
+    "tec.mx": ["tec", "tecnológico de monterrey", "tecnologico"],
+    "ipn.mx": ["ipn", "politécnico", "politecnico", "instituto politécnico"],
 }
 
 TERM_KEYWORDS = {
-    "carreras":   ["carrera", "licenciatura", "ingeniería", "programa", "oferta educativa", "ingenieria"],
-    "becas":      ["beca", "financiamiento", "apoyo", "scholarship", "económico"],
-    "admisiones": ["admisión", "admisiones", "ingreso", "requisito", "inscripción", "admision"],
-    "posgrados":  ["posgrado", "maestría", "doctorado", "especialidad", "maestria"],
+    "carreras": [
+        "carrera",
+        "licenciatura",
+        "ingeniería",
+        "programa",
+        "oferta educativa",
+        "ingenieria",
+    ],
+    "becas": ["beca", "financiamiento", "apoyo", "scholarship", "económico"],
+    "admisiones": [
+        "admisión",
+        "admisiones",
+        "ingreso",
+        "requisito",
+        "inscripción",
+        "admision",
+    ],
+    "posgrados": ["posgrado", "maestría", "doctorado", "especialidad", "maestria"],
 }
 
 UNIVERSITY_BASE_URLS = {
     "iteso.mx": "https://www.iteso.mx",
-    "tec.mx":   "https://tec.mx",
-    "ipn.mx":   "https://www.ipn.mx",
+    "tec.mx": "https://tec.mx",
+    "ipn.mx": "https://www.ipn.mx",
 }
 
 UNIVERSITY_SEARCH_URLS = {
     "iteso.mx": "https://www.iteso.mx/busqueda?q={term}",
-    "tec.mx":   "https://tec.mx/es/search?query={term}",
+    "tec.mx": "https://tec.mx/es/search?query={term}",
 }
 
 
@@ -58,11 +75,13 @@ def _accept_cookies_if_present(driver) -> None:
     ]
     for by, value in selectors:
         try:
-            btn = WebDriverWait(driver, 2).until(EC.element_to_be_clickable((by, value)))
+            btn = WebDriverWait(driver, 2).until(
+                EC.element_to_be_clickable((by, value))
+            )
             btn.click()
             time.sleep(0.3)
             return
-        except Exception:  
+        except Exception:
             continue
 
 
@@ -85,7 +104,7 @@ def _wait_page_ready(driver, timeout: int = 15) -> None:
 
 
 def _search_via_google_site(driver, domain: str, term: str) -> None:
-    """ Busca 'site:domain term' en Google y hace clic en el primer resultado"""
+    """Busca 'site:domain term' en Google y hace clic en el primer resultado"""
     query = f"site:{domain} {term}"
     print(f"\nGoogle site search: '{query}'")
     driver.get("https://www.google.com")
@@ -100,7 +119,9 @@ def _search_via_google_site(driver, domain: str, term: str) -> None:
 
     try:
         results = _wait(driver, 8).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#search a[href^='http']"))
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "#search a[href^='http']")
+            )
         )
         for link in results:
             href = link.get_attribute("href") or ""
@@ -112,13 +133,17 @@ def _search_via_google_site(driver, domain: str, term: str) -> None:
     except Exception:  # pylint: disable=broad-except
         pass
 
-    print(f"\nNo se encontró resultado en Google site:{domain} para '{term}' "
-          f"Verificando en la página de resultados de Google.")
+    print(
+        f"\nNo se encontró resultado en Google site:{domain} para '{term}' "
+        f"Verificando en la página de resultados de Google."
+    )
+
 
 @given("I open a browser")  # pylint: disable=not-callable
 def open_browser(context):
     context.driver = _build_driver()
     context.driver.implicitly_wait(3)
+
 
 @given("I am on the Google homepage")  # pylint: disable=not-callable
 def go_to_google(context):
@@ -129,9 +154,7 @@ def go_to_google(context):
 
 @when('I search for "{query}" on Google')  # pylint: disable=not-callable
 def google_search(context, query):
-    search_box = _wait(context.driver).until(
-        EC.element_to_be_clickable((By.NAME, "q"))
-    )
+    search_box = _wait(context.driver).until(EC.element_to_be_clickable((By.NAME, "q")))
     search_box.clear()
     search_box.send_keys(query)
     search_box.send_keys(Keys.RETURN)
@@ -144,7 +167,9 @@ def click_first_result(context, domain):
     context.target_domain = domain
     try:
         results = _wait(context.driver, 8).until(
-            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "#search a[href^='http']"))
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "#search a[href^='http']")
+            )
         )
         for link in results:
             href = link.get_attribute("href") or ""
@@ -186,6 +211,7 @@ def _verify_university_page(context, domain: str) -> None:
     )
     print(f"\nVerificado: en '{domain}' — URL: {driver.current_url}")
 
+
 @when('I search for "{term}" on the university website')  # pylint: disable=not-callable
 def search_on_university(context, term):
     """Buscamos el término de manera directa y si no existe se hace una búsqueda en site"""
@@ -203,22 +229,24 @@ def search_on_university(context, term):
         _search_via_google_site(driver, domain or "", term)
 
 
-@then('the results should be related to "{term}" offered by the university')  # pylint: disable=not-callable
+@then(
+    'the results should be related to "{term}" offered by the university'
+)  # pylint: disable=not-callable
 def verify_results(context, term):
     """
     Verificamos que la página este relacionada con el term"""
     driver = context.driver
     current_url = driver.current_url.lower()
-    page_title  = driver.title.lower()
-    page_body   = driver.page_source.lower()
+    page_title = driver.title.lower()
+    page_body = driver.page_source.lower()
 
     term_lower = term.lower()
-    synonyms   = TERM_KEYWORDS.get(term_lower, [term_lower])
-    all_terms  = list({term_lower} | set(synonyms))
+    synonyms = TERM_KEYWORDS.get(term_lower, [term_lower])
+    all_terms = list({term_lower} | set(synonyms))
 
-    url_match   = any(t in current_url for t in all_terms)
-    title_match = any(t in page_title  for t in all_terms)
-    body_match  = any(t in page_body   for t in all_terms)
+    url_match = any(t in current_url for t in all_terms)
+    title_match = any(t in page_title for t in all_terms)
+    body_match = any(t in page_body for t in all_terms)
 
     assert url_match or title_match or body_match, (
         f"Resultados no relacionados con '{term}'.\n"
